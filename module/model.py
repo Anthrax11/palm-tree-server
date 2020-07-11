@@ -1,4 +1,5 @@
 from module import db
+from datetime import datetime
 
 
 class User(db.Model):
@@ -30,13 +31,13 @@ class Sensor(db.Model):
     sensor_name = db.Column(db.String(24), nullable=False, unique=True)
     sensor_type = db.Column(db.String(24))
     device = db.Column(db.Integer, db.ForeignKey('device.device_id'), nullable=False)
-    data = db.relationship('Data', backref='data', lazy=True) #setting relationship with Data
+    data = db.relationship('SensorData', backref='sensordata', lazy=True) #setting relationship with Data
 
     def __repr__(self):
         return f"'{self.sensor_name}', '{self.sensor_type}', '{self.device}'"
 
 
-class Data(db.Model):
+class SensorData(db.Model):
     """Stores sensor data"""
     id = db.Column(db.Integer, primary_key=True)
     sensor_id = db.Column(db.Integer, db.ForeignKey('sensor.sensor_id'), nullable=False)
@@ -46,3 +47,11 @@ class Data(db.Model):
 
     def __repr__(self):
         return f"'{self.sensor_id}', '{self.data_type}', '{self.data}', '{self.time}'"
+
+
+def init_db():
+    db.create_all()
+
+
+if __name__ == "__main__":
+    init_db()
